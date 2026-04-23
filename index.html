@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Ganhos Uber - Dark Edition</title>
+    <style>
+        /* Reset básico e tipografia */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Uber Move Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Fundo da página: Preto puro */
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Principal (Card) */
+        .card {
+            background-color: #111111; /* Cinza quase preto para contraste */
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.05); /* Sombra suave branca */
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid #222222;
+        }
+
+        /* Área do Logo */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333333;
+        }
+
+        /* Simulação do Logo da Uber (usando texto e estilo) */
+        .uber-logo {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #FFFFFF;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: #AAAAAA;
+            margin-top: 5px;
+        }
+
+        /* Estilização dos Inputs */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #EEEEEE;
+            font-size: 14px;
+        }
+
+        /* Campos de entrada: Fundo escuro, borda cinza, texto branco */
+        input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            background-color: #222222;
+            border: 2px solid #333333;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Efeito de foco no input: Borda branca */
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #FFFFFF;
+        }
+
+        /* Ajuste para o placeholder ficar cinza claro */
+        input[type="number"]::placeholder {
+            color: #666666;
+        }
+
+        /* Botão de Calcular - Usando o Verde Uber */
+        button {
+            width: 100%;
+            padding: 16px;
+            background-color: #276EF1; /* Azul Uber para botões primários */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1A54C7;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Área de Resultados */
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #1A1A1A;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            display: none; /* Escondido inicialmente */
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222222;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #AAAAAA;
+        }
+
+        .result-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        /* Destaque para o Lucro Líquido - Verde de Sucesso */
+        .profit {
+            color: #05A357; 
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <div class="uber-logo">Uber</div>
+        <div class="subtitle">Calculadora de Ganhos Líquidos</div>
+    </div>
+
+    <div class="input-group">
+        <label for="faturamento">Faturamento Bruto do Dia (R$)</label>
+        <input type="number" id="faturamento" placeholder="Ex: 350.00" step="0.01">
+    </div>
+
+    <div class="input-group">
+        <label for="km">Quilometragem Total Rodada (KM)</label>
+        <input type="number" id="km" placeholder="Ex: 180">
+    </div>
+
+    <div class="input-group">
+        <label for="kmpl">Eficiência do Carro (KM/L)</label>
+        <input type="number" id="kmpl" placeholder="Ex: 12.5" step="0.1">
+    </div>
+
+    <div class="input-group">
+        <label for="precoLitro">Preço do Combustível (R$/L)</label>
+        <input type="number" id="precoLitro" placeholder="Ex: 5.89" step="0.01">
+    </div>
+
+    <div class="input-group">
+        <label for="horas">Tempo Online (Horas)</label>
+        <input type="number" id="horas" placeholder="Ex: 8" step="0.5">
+    </div>
+
+    <button onclick="calcular()">Calcular Desempenho</button>
+
+    <div id="resultado" class="result">
+        <div class="result-item">
+            <span class="result-label">Custo de Combustível</span>
+            <span class="result-value" id="resCusto">R$ 0,00</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Lucro Líquido (Estimado)</span>
+            <span class="result-value profit" id="resLucro">R$ 0,00</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Ganho Líquido por Hora</span>
+            <span class="result-value" id="resHora">R$ 0,00/h</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formatarMoeda(valor) {
+        return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function calcular() {
+        // Obter valores e converter para Float
+        const fat = parseFloat(document.getElementById('faturamento').value);
+        const km = parseFloat(document.getElementById('km').value);
+        const kmpl = parseFloat(document.getElementById('kmpl').value);
+        const preco = parseFloat(document.getElementById('precoLitro').value);
+        const horas = parseFloat(document.getElementById('horas').value);
+
+        // Validação Simples
+        if ([fat, km, kmpl, preco, horas].some(isNaN) || [fat, km, kmpl, preco, horas].some(v => v <= 0)) {
+            alert("Por favor, preencha todos os campos com valores válidos maiores que zero.");
+            return;
+        }
+
+        // Lógica dos Cálculos
+        const litrosConsumidos = km / kmpl;
+        const custoCombustivel = litrosConsumidos * preco;
+        const lucro = fat - custoCombustivel;
+        const lucroHora = lucro / horas;
+
+        // Atualizar o DOM com os resultados formatados
+        document.getElementById('resCusto').innerText = formatarMoeda(custoCombustivel);
+        document.getElementById('resLucro').innerText = formatarMoeda(lucro);
+        document.getElementById('resHora').innerText = formatarMoeda(lucroHora) + '/h';
+
+        // Mostrar a área de resultado com animação
+        const areaResultado = document.getElementById('resultado');
+        areaResultado.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
