@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Ganhos Uber - Dark Edition</title>
+    <title>Uber | Ganhos</title>
     <style>
         /* Reset básico e tipografia */
         * {
@@ -166,6 +166,9 @@
          .profitt {
             color: #b80808; 
         }
+         .profittt {
+            color: #01ccff; 
+        }
 
 
     </style>
@@ -195,7 +198,7 @@
 
     <div class="input-group">
         <label for="precoLitro">Preço do Combustível (R$/L)</label>
-        <input type="number" id="precoLitro" placeholder="Ex: 5.89" step="0.01">
+        <input type="number" id="precoLitro" placeholder="Ex: 6.59" step="0.01">
     </div>
 
     <div class="input-group">
@@ -217,6 +220,10 @@
         <div class="result-item">
             <span class="result-label">Ganho Líquido por Hora</span>
             <span class="result-value" id="resHora">R$ 0,00/h</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Porcentagem</span>
+            <span class="result-value profittt" id="porc"> 0,00 %</span>
         </div>
     </div>
 </div>
@@ -245,11 +252,13 @@
         const custoCombustivel = litrosConsumidos * preco;
         const lucro = fat - custoCombustivel;
         const lucroHora = lucro / horas;
+        const porcent = (custoCombustivel*100)/fat
 
         // Atualizar o DOM com os resultados formatados
         document.getElementById('resCusto').innerText = formatarMoeda(custoCombustivel);
         document.getElementById('resLucro').innerText = formatarMoeda(lucro);
         document.getElementById('resHora').innerText = formatarMoeda(lucroHora) + '/h';
+        document.getElementById('porc').innerText = (porcent).toFixed(2) + '%';
 
         // Mostrar a área de resultado com animação
         const areaResultado = document.getElementById('resultado');
